@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字加减迷宫</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f0f0; text-align: center; }
+  #game { display: grid; grid-template-columns: repeat(5, 50px); grid-gap: 3px; justify-content: center; margin: 20px auto; }
+  .cell {
+    width: 50px; height: 50px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 14px; border: 1px solid #000; background: #fff;
+  }
+  .plus { background: #a8e6cf; }
+  .minus { background: #ff8b94; }
+  .current { border: 3px solid #000; }
+  #controls { margin: 15px; }
+  button { padding: 5px 10px; font-size: 16px; margin: 3px; }
+</style>
+</head>
+<body>
+
+<h2>数字加减迷宫</h2>
+<p>分数：<span id="score">10</span></p>
+
+<div id="game"></div>
+
+<div id="controls">
+  <button onclick="move('up')">↑</button><br>
+  <button onclick="move('left')">←</button>
+  <button onclick="move('down')">↓</button>
+  <button onclick="move('right')">→</button>
+</div>
+
+<script>
+  const map = [
+    [5, -5, 10, -10, 5],
+    [10, -10, 5, -5, 10],
+    [-5, 10, -10, 5, -5],
+    [10, -10, 5, -5, 10],
+    [10, 10, -10, 10, 100]
+  ];
+  let x = 0, y = 4, score = 10;
+
+  function render() {
+    const game = document.getElementById('game');
+    game.innerHTML = '';
+    for (let j = 0; j < 5; j++) {
+      for (let i = 0; i < 5; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.textContent = map[j][i];
+        if (map[j][i] > 0) cell.classList.add('plus');
+        if (map[j][i] < 0) cell.classList.add('minus');
+        if (i === x && j === y) cell.classList.add('current');
+        game.appendChild(cell);
+      }
+    }
+    document.getElementById('score').textContent = score;
+  }
+
+  function move(dir) {
+    let newX = x, newY = y;
+    if (dir === 'up') newY--;
+    if (dir === 'down') newY++;
+    if (dir === 'left') newX--;
+    if (dir === 'right') newX++;
+    if (newX < 0 || newX >= 5 || newY < 0 || newY >= 5) return;
+    x = newX; y = newY;
+    score += map[y][x];
+    render();
+    if (x === 2 && y === 2) {
+      if (score > 100) alert('胜利！分数大于100！');
+      else alert('失败！分数不足100！');
+    }
+  }
+
+  render();
+</script>
+
+</body>
+</html>
